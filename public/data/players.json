@@ -1,0 +1,29 @@
+{
+    "players": [
+        {
+            "id": "1",
+            "name": "Player 1",
+            "available": false
+        },
+        {
+            "id": "2",
+            "name": "Player 2",
+            "available": false
+        },
+        {
+            "id": "3",
+            "name": "Player 3",
+            "available": false
+        },
+        {
+            "id": "4",
+            "name": "Player 4",
+            "available": false
+        },
+        {
+            "id": "5",
+            "name": "Player 5",
+            "available": false
+        }
+    ]
+}
