@@ -1,6 +1,6 @@
-import GameComponent from '../components/GameComponent';
+import GameComponent from '../components/Game';
 import React, { useState } from 'react';
-import PlayerComponent from '../components/PlayerComponent';
+import PlayerComponent from '../components/Player';
 import styles from './ConfigurationScreen.module.css';
 
 const ConfigurationScreen = () => {
@@ -23,7 +23,7 @@ const ConfigurationScreen = () => {
                 <GameComponent onSelectGame={handleSelectGame} />
             </div>
             <div className={styles.segment2}>
-                <PlayerComponent onSelectPlayers={handleSelectPlayers} />
+                <PlayerComponent onSelectPlayers={handleSelectPlayers} gameState={selectedGame !== null}/>
             </div>
         </div>
     );

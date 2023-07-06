@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import styles from './Player.module.css';
 
-const PlayerComponent = ({ onSelectPlayers }) => {
+const PlayerComponent = ({ onSelectPlayers, gameState }) => {
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [groupMode, setGroupMode] = useState(false);
@@ -8,6 +9,7 @@ const PlayerComponent = ({ onSelectPlayers }) => {
   const [groups, setGroups] = useState([]);
   const [finalizedPlayers, setFinalizedPlayers] = useState([]);
   const [isFinalized, setIsFinalized] = useState(false);
+  const [canStart, setCanStart] = useState(false)
 
   useEffect(() => {
     fetch('/data/players.json')
@@ -44,6 +46,10 @@ const PlayerComponent = ({ onSelectPlayers }) => {
     onSelectPlayers(selectedPlayers);
   };
 
+  const startPlaying = () => {
+    console.log("Lets Start");
+  };
+
   const handleFinalizeClick = () => {
     if (groupMode) {
       const shuffledPlayers = shuffleArray(selectedPlayers);
@@ -61,6 +67,9 @@ const PlayerComponent = ({ onSelectPlayers }) => {
     }
     else {
       setFinalizedPlayers(selectedPlayers);
+    }
+    if (gameState) {
+      setCanStart(true);
     }
   };
 
@@ -85,79 +94,84 @@ const PlayerComponent = ({ onSelectPlayers }) => {
   };
 
   return (
-    <div>
-      <div>
-        <h2>Select Players</h2>
-        <div>
-          {players.map((player) => (
-            <button
-              key={player.id}
-              onClick={() => handlePlayerClick(player.id)}
-              disabled={groupMode && selectedPlayers.length >= groupSize && !player.selected}
-            >
-              {player.name}
-            </button>
-          ))}
-        </div>
-        <button disabled={selectedPlayers.length === 0} onClick={submitFinalAvailable}>Ok</button>
-      </div>
-      {selectedPlayers.length > 0 && <div>
-        <h3>Available Players:</h3>
-        <ul>
-          {selectedPlayers.map((player) => (
-            <li key={player}>{player}</li>
-          ))}
-        </ul>
-      </div>}
-      <div>
-        <label>
-          Mode:
-          <select onChange={handleModeChange}>
-            <option value="individual">Individual</option>
-            <option value="groups">Groups</option>
-          </select>
-        </label>
-      </div>
-      {groupMode && (
-        <div>
-          <label>
-            Group Size:
-            <input type="number" value={groupSize} onChange={handleGroupSizeChange} />
-          </label>
-        </div>
-      )}
-      <button onClick={handleFinalizeClick} disabled={selectedPlayers.length === 0}>
-        Finalize
-      </button>
-      {groupMode && (
-        <div>
-          <h3>Groups:</h3>
-          {groups.map((group) => (
-            <div key={group.groupName}>
-              <h4>{group.groupName} Group:</h4>
+    <div className={styles.container}>
+      <div className={styles.encloser1}>
+        {!isFinalized && <div>
+          <h2>Select Players</h2>
+          <div>
+            {players.map((player) => (
+              <button
+                key={player.id}
+                onClick={() => handlePlayerClick(player.id)}
+              >
+                {player.name}
+              </button>
+            ))}
+          </div>
+          <button disabled={selectedPlayers.length === 0} onClick={submitFinalAvailable}>Ok</button>
+        </div>}
+        {selectedPlayers.length > 0 && <div>
+          <h3>Available Players:</h3>
+          <ul>
+            {selectedPlayers.map((player) => (
+              <li key={player}>{player}</li>
+            ))}
+          </ul>
+        </div>}
+        {isFinalized && <div>
+          <div>
+            <label>
+              Mode:
+              <select onChange={handleModeChange}>
+                <option value="individual">Individual</option>
+                <option value="groups">Groups</option>
+              </select>
+            </label>
+          </div>
+          {groupMode && (
+            <div>
+              <label>
+                Group Size:
+                <input type="number" value={groupSize} onChange={handleGroupSizeChange} />
+              </label>
+            </div>
+          )}
+          <button onClick={handleFinalizeClick} disabled={selectedPlayers.length === 0}>
+            Finalize
+          </button>
+          {groupMode && (
+            <div>
+              <h3>Groups:</h3>
+              {groups.map((group) => (
+                <div key={group.groupName}>
+                  <h4>{group.groupName} Group:</h4>
+                  <ul>
+                    {group.players.map((player) => (
+                      <li key={player}>{player}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}</div>}
+        {!groupMode && finalizedPlayers.length > 0 && (
+          <div>
+            <h3>Finalized Players:</h3>
+            {finalizedPlayers.length > 0 ? (
               <ul>
-                {group.players.map((player) => (
+                {finalizedPlayers.map((player) => (
                   <li key={player}>{player}</li>
                 ))}
               </ul>
-            </div>
-          ))}
-        </div>
-      )}
-      {!groupMode && finalizedPlayers.length > 0 && (
-        <div>
-          <h3>Finalized Players:</h3>
-          {finalizedPlayers.length > 0 ? (
-            <ul>
-              {finalizedPlayers.map((player) => (
-                <li key={player}>{player}</li>
-              ))}
-            </ul>
-          ) : (
-            <p>No players finalized.</p>
-          )}
-        </div>
-      )}
+            ) : (
+              <p>No players finalized.</p>
+            )}
+          </div>
+        )}
+      </div>
+      {canStart && <div className={styles.encloser2}>
+        <button disabled={!canStart} onClick={startPlaying}>Start Game</button>
+      </div>}
     </div>
   );
 };

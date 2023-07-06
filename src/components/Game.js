@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styles from './GameComponent.module.css';
+import styles from './Game.module.css';
 
 const GameComponent = ({ onSelectGame }) => {
     const [games, setGames] = useState([]);
