@@ -6,11 +6,11 @@ import coffeeCupImage from "../images/coffee-is-love.gif";
 
 const ConfigurationScreen = () => {
     const [selectedGame, setSelectedGame] = useState(null);
+    const [showGame, setShowGame] = useState(false);
     const [availablePlayers, setAvailablePlayers] = useState([]);
 
     const handleSelectGame = (game) => {
         setSelectedGame(game);
-        // Handle the selected game data as needed
         console.log('Selected game:', selectedGame);
     };
     const handleSelectPlayers = (players) => {
@@ -18,14 +18,17 @@ const ConfigurationScreen = () => {
         console.log('Available:', availablePlayers);
     }
 
+    const handleNext = (value) => {
+        setShowGame(value);
+        console.log('Show:', value);
+    }
+
     return (
         <div className={styles.container}>
-            {/* <div className={styles.segment1}>
-                <GameComponent onSelectGame={handleSelectGame} />
-            </div> */}
-            <div className={styles.segment2}>
+            <div className={styles.segment}>
                 <img src={coffeeCupImage} alt="Coffee Cup" />
-                <PlayerComponent onSelectPlayers={handleSelectPlayers} gameState={selectedGame !== null} />
+                {!showGame && <PlayerComponent onSelectPlayers={handleSelectPlayers} onGoNext={handleNext} />}
+                {showGame && <GameComponent onSelectGame={handleSelectGame} />}
             </div>
         </div>
     );

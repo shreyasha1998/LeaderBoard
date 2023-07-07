@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Player.module.css';
+import buttonImage from '../images/next.png';
 
-const PlayerComponent = ({ onSelectPlayers }) => {
+const PlayerComponent = ({ onSelectPlayers, onGoNext }) => {
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [groupMode, setGroupMode] = useState(false);
@@ -34,6 +35,11 @@ const PlayerComponent = ({ onSelectPlayers }) => {
   const handleModeChange = (e) => {
     const mode = e.target.value;
     setGroupMode(mode === 'groups');
+  };
+
+  const moveToNext = () => {
+    console.log("GoNext");
+    onGoNext(true);
   };
 
   const handleGroupSizeChange = (e) => {
@@ -209,6 +215,11 @@ const PlayerComponent = ({ onSelectPlayers }) => {
           </div>
         )}
       </div>
+      {canStart && <div className={styles.encloser2}>
+        <button className={styles.buttonImg}>
+          <img src={buttonImage} alt="Button" className={styles.buttonImage} onClick={moveToNext} />
+        </button>
+      </div>}
     </div>
   );
 };

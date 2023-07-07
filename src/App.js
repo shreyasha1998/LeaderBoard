@@ -3,6 +3,7 @@ import './App.css';
 import HomeScreen from './pages/HomeScreen';
 import RootLayout from './components/RootLayout';
 import ConfigurationScreen from './pages/ConfigurationScreen';
+import Playground from './pages/Playground';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,12 @@ const router = createBrowserRouter([
       {
         path: "configure",
         element: <ConfigurationScreen  />,
-      }],
+      },
+      {
+        path: "playground",
+        element: <Playground />,
+      },
+    ],
   }
 ]);
 

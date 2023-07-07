@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './Game.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const GameComponent = ({ onSelectGame }) => {
     const [games, setGames] = useState([]);
     const [selectedGame, setSelectedGame] = useState(null);
     const [newGameInput, setNewGameInput] = useState('');
     const [showNewGameForm, setShowNewGameForm] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedGames = localStorage.getItem('games');
@@ -20,7 +22,7 @@ const GameComponent = ({ onSelectGame }) => {
                 })
                 .catch((error) => console.log(error));
         }
-        
+
     }, []);
 
     const handleGameClick = useCallback((gameId, gameName) => {
@@ -31,10 +33,15 @@ const GameComponent = ({ onSelectGame }) => {
 
     useEffect(() => {
         onSelectGame(selectedGame);
-      }, [onSelectGame, selectedGame]);
+    }, [onSelectGame, selectedGame]);
 
     const handleNewGameClick = () => {
         setShowNewGameForm(true);
+    };
+
+    const handleStartPlaying = () => {
+        console.log("Game Started");
+        navigate('/playground');
     };
 
     const handleNewGameSubmit = (e) => {
@@ -72,7 +79,7 @@ const GameComponent = ({ onSelectGame }) => {
                     ))}
                 </div>
                 <hr />
-                <div className={`${styles['button-container']} ${styles.special}`}>
+                <div className={styles.special}>
                     <button onClick={handleNewGameClick} className={styles.special}>Add New Game</button>
                     {showNewGameForm && (
                         <form onSubmit={handleNewGameSubmit} className={styles['new-game-form']}>
@@ -88,13 +95,18 @@ const GameComponent = ({ onSelectGame }) => {
                         </form>
                     )}
                 </div>
+                {selectedGame && (
+                    <><div className={styles.preview}>
+                        <h3>Current Game:</h3>
+                        <p>{selectedGame}</p>
+                    </div>
+                        <div className={styles.start}>
+                            <button onClick={handleStartPlaying}>Start Playing</button>
+                        </div>
+                    </>
+                )}
             </div>
-            {selectedGame && (
-                <div className={styles.encloser2}>
-                    <h3>Current Game:</h3>
-                    <p>{selectedGame}</p>
-                </div>
-            )}
+
         </div>
     );
 };
