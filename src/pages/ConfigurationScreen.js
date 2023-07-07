@@ -2,6 +2,7 @@ import GameComponent from '../components/Game';
 import React, { useState } from 'react';
 import PlayerComponent from '../components/Player';
 import styles from './ConfigurationScreen.module.css';
+import coffeeCupImage from "../images/coffee-is-love.gif";
 
 const ConfigurationScreen = () => {
     const [selectedGame, setSelectedGame] = useState(null);
@@ -19,11 +20,12 @@ const ConfigurationScreen = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.segment1}>
+            {/* <div className={styles.segment1}>
                 <GameComponent onSelectGame={handleSelectGame} />
-            </div>
+            </div> */}
             <div className={styles.segment2}>
-                <PlayerComponent onSelectPlayers={handleSelectPlayers} gameState={selectedGame !== null}/>
+                <img src={coffeeCupImage} alt="Coffee Cup" />
+                <PlayerComponent onSelectPlayers={handleSelectPlayers} gameState={selectedGame !== null} />
             </div>
         </div>
     );

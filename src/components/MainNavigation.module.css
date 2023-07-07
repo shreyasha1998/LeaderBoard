@@ -1,9 +1,13 @@
 .navbar {
     display: flex;
     justify-content: center;
-    align-items: center;
-    background-color: #43cecd;
+    background-color: #f4e9db;
     padding: 10px;
+    overflow: hidden;
+    position: fixed;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .navbarList {
@@ -19,7 +23,7 @@
 
 .navbarLink {
     text-decoration: none;
-    color: white;
+    color: #884A39;
     font-weight: bold;
 }
 
@@ -28,7 +32,7 @@
 }
 
 .activeLink {
-    color: white;
+    color: #C38154;
     text-decoration: underline;
     font-weight: bold;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Player.module.css';
 
-const PlayerComponent = ({ onSelectPlayers, gameState }) => {
+const PlayerComponent = ({ onSelectPlayers }) => {
   const [players, setPlayers] = useState([]);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [groupMode, setGroupMode] = useState(false);
@@ -46,10 +46,6 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
     onSelectPlayers(selectedPlayers);
   };
 
-  const startPlaying = () => {
-    console.log("Lets Start");
-  };
-
   const handleFinalizeClick = () => {
     if (groupMode) {
       const shuffledPlayers = shuffleArray(selectedPlayers);
@@ -68,9 +64,7 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
     else {
       setFinalizedPlayers(selectedPlayers);
     }
-    if (gameState) {
-      setCanStart(true);
-    }
+    setCanStart(true);
   };
 
   const shuffleArray = (array) => {
@@ -83,7 +77,24 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
   };
 
   const generateGroupNames = (numGroups) => {
-    const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Orange', 'Purple', 'Pink', 'Brown'];
+    const colors = [
+      'Red',
+      'Blue',
+      'Green',
+      'Yellow',
+      'Orange',
+      'Purple',
+      'Pink',
+      'Cyan',
+      'Magenta',
+      'Lime',
+      'Teal',
+      'Gold',
+      'Silver',
+      'Brown',
+      'Gray',
+      'Indigo',
+    ];
     const groupNames = [];
     for (let i = 0; i < numGroups; i++) {
       const randomIndex = Math.floor(Math.random() * colors.length);
@@ -96,9 +107,9 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
   return (
     <div className={styles.container}>
       <div className={styles.encloser1}>
-        {!isFinalized && <div>
+        {!isFinalized && <div className={styles.buttons}>
           <h2>Select Players</h2>
-          <div>
+          <div className={styles['button-container']}>
             {players.map((player) => (
               <button
                 key={player.id}
@@ -110,52 +121,81 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
           </div>
           <button disabled={selectedPlayers.length === 0} onClick={submitFinalAvailable}>Ok</button>
         </div>}
-        {selectedPlayers.length > 0 && <div>
+        {!canStart && selectedPlayers.length > 0 && <div className={styles.players}>
           <h3>Available Players:</h3>
-          <ul>
+          <ul className={styles.list}>
             {selectedPlayers.map((player) => (
               <li key={player}>{player}</li>
             ))}
           </ul>
         </div>}
         {isFinalized && <div>
-          <div>
-            <label>
-              Mode:
-              <select onChange={handleModeChange}>
-                <option value="individual">Individual</option>
-                <option value="groups">Groups</option>
-              </select>
-            </label>
+          <div className={styles.mode}>
+            <h3>Mode:</h3>
+            <div className={styles.radio}>
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="individual"
+                  checked={!groupMode}
+                  onChange={handleModeChange}
+                  disabled={canStart}
+                />
+                Individual
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="groups"
+                  checked={groupMode}
+                  onChange={handleModeChange}
+                  disabled={canStart}
+                />
+                Groups
+              </label>
+            </div>
           </div>
+
           {groupMode && (
-            <div>
+            <div className={styles.group}>
               <label>
                 Group Size:
-                <input type="number" value={groupSize} onChange={handleGroupSizeChange} />
+                <input type="number" value={groupSize} onChange={handleGroupSizeChange} disabled={canStart} />
               </label>
             </div>
           )}
-          <button onClick={handleFinalizeClick} disabled={selectedPlayers.length === 0}>
+          <button onClick={handleFinalizeClick} disabled={canStart}>
             Finalize
           </button>
-          {groupMode && (
-            <div>
+          {groupMode && canStart && (
+            <div className={styles.previewlist}>
               <h3>Groups:</h3>
-              {groups.map((group) => (
-                <div key={group.groupName}>
-                  <h4>{group.groupName} Group:</h4>
-                  <ul>
-                    {group.players.map((player) => (
-                      <li key={player}>{player}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+              <div className={styles.columnContainer}>
+                {groups.map((group) => (
+                  <div key={group.groupName} className={styles.column}>
+                    <h4>
+                      <span
+                        className={styles.colorBox}
+                        style={{ backgroundColor: group.groupName.toLowerCase() }}
+                      ></span>
+                      {group.groupName} Group:
+                    </h4>
+                    <ul>
+                      {group.players.map((player) => (
+                        <li key={player}>{player}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
-          )}</div>}
+          )}
+
+        </div>}
         {!groupMode && finalizedPlayers.length > 0 && (
-          <div>
+          <div className={styles.preview}>
             <h3>Finalized Players:</h3>
             {finalizedPlayers.length > 0 ? (
               <ul>
@@ -169,9 +209,6 @@ const PlayerComponent = ({ onSelectPlayers, gameState }) => {
           </div>
         )}
       </div>
-      {canStart && <div className={styles.encloser2}>
-        <button disabled={!canStart} onClick={startPlaying}>Start Game</button>
-      </div>}
     </div>
   );
 };

@@ -24,6 +24,26 @@
             "id": "5",
             "name": "Player 5",
             "available": false
+        },
+        {
+            "id": "6",
+            "name": "Player 6",
+            "available": false
+        },
+        {
+            "id": "7",
+            "name": "Player 7",
+            "available": false
+        },
+        {
+            "id": "8",
+            "name": "Player 8",
+            "available": false
+        },
+        {
+            "id": "9",
+            "name": "Player 9",
+            "available": false
         }
     ]
 }
