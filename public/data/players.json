@@ -2,38 +2,31 @@
     "players": [
         {
             "id": "1",
-            "name": "Player 1",
-            "available": false
+            "name": "Player 1"
         },
         {
             "id": "2",
-            "name": "Player 2",
-            "available": false
+            "name": "Player 2"
         },
         {
             "id": "3",
-            "name": "Player 3",
-            "available": false
+            "name": "Player 3"
         },
         {
             "id": "4",
-            "name": "Player 4",
-            "available": false
+            "name": "Player 4"
         },
         {
             "id": "5",
-            "name": "Player 5",
-            "available": false
+            "name": "Player 5"
         },
         {
             "id": "6",
-            "name": "Player 6",
-            "available": false
+            "name": "Player 6"
         },
         {
             "id": "7",
-            "name": "Player 7",
-            "available": false
+            "name": "Player 7"
         },
         {
             "id": "8",
@@ -42,8 +35,7 @@
         },
         {
             "id": "9",
-            "name": "Player 9",
-            "available": false
+            "name": "Player 9"
         }
     ]
 }

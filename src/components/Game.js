@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styles from './Game.module.css';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { gameActions } from '../store/game-slice';
 
 const GameComponent = ({ onSelectGame }) => {
     const [games, setGames] = useState([]);
-    const [selectedGame, setSelectedGame] = useState(null);
+    // const [selectedGame, setSelectedGame] = useState(null);
     const [newGameInput, setNewGameInput] = useState('');
     const [showNewGameForm, setShowNewGameForm] = useState(false);
     const navigate = useNavigate();
+    const selectedGame = useSelector((state)=>state.game.selectedGame.name);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const storedGames = localStorage.getItem('games');
@@ -25,15 +29,19 @@ const GameComponent = ({ onSelectGame }) => {
 
     }, []);
 
-    const handleGameClick = useCallback((gameId, gameName) => {
-        setSelectedGame((prevSelectedGame) =>
-            prevSelectedGame === gameName ? null : gameName
-        );
-    }, []);
+    // const handleGameClick = useCallback((gameId, gameName) => {
+    //     setSelectedGame((prevSelectedGame) =>
+    //         prevSelectedGame === gameName ? null : gameName
+    //     );
+    // }, []);
 
-    useEffect(() => {
-        onSelectGame(selectedGame);
-    }, [onSelectGame, selectedGame]);
+    // useEffect(() => {
+    //     onSelectGame(selectedGame);
+    // }, [onSelectGame, selectedGame]);
+
+    const handleGameClick = (gameId,gameName) =>{
+        dispatch(gameActions.selectGame({gameId,gameName}));
+    }
 
     const handleNewGameClick = () => {
         setShowNewGameForm(true);

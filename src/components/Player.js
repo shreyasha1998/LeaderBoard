@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Player.module.css';
 import buttonImage from '../images/next.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { gameActions } from '../store/game-slice';
+import { uiActions } from '../store/ui-slice';
 
-const PlayerComponent = ({ onSelectPlayers, onGoNext }) => {
+const PlayerComponent = ({ onGoNext }) => {
   const [players, setPlayers] = useState([]);
-  const [selectedPlayers, setSelectedPlayers] = useState([]);
+  // const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [groupMode, setGroupMode] = useState(false);
   const [groupSize, setGroupSize] = useState(1);
-  const [groups, setGroups] = useState([]);
-  const [finalizedPlayers, setFinalizedPlayers] = useState([]);
+  // const [groups, setGroups] = useState([]); /*Payers in groups */
+  // const [finalizedPlayers, setFinalizedPlayers] = useState([]); /*Players individual */
   const [isFinalized, setIsFinalized] = useState(false);
   const [canStart, setCanStart] = useState(false)
+  const selectedPlayers = useSelector((state) => state.game.availablePlayers);
+  const groups = useSelector((state) => state.game.groups);
+  const finalizedPlayers = useSelector((state) => state.game.individualPlayers);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetch('/data/players.json')
@@ -23,13 +30,14 @@ const PlayerComponent = ({ onSelectPlayers, onGoNext }) => {
 
   const handlePlayerClick = (playerId) => {
     const updatedPlayers = players.map((player) =>
-      player.id === playerId ? { ...player, selected: !player.selected } : player
+      player.id === playerId ? { ...player, available: !player.available } : player
     );
     setPlayers(updatedPlayers);
-    const selectedPlayers = updatedPlayers
-      .filter((player) => player.selected)
-      .map((player) => player.name);
-    setSelectedPlayers(selectedPlayers);
+    // const selectedPlayers = updatedPlayers
+    //   .filter((player) => player.available)
+    //   .map((player) => player.name);
+    // setSelectedPlayers(selectedPlayers);
+    dispatch(gameActions.updateAvailablePlayers(updatedPlayers));
   };
 
   const handleModeChange = (e) => {
@@ -39,7 +47,8 @@ const PlayerComponent = ({ onSelectPlayers, onGoNext }) => {
 
   const moveToNext = () => {
     console.log("GoNext");
-    onGoNext(true);
+    // onGoNext(true);
+    dispatch(uiActions.next(true));
   };
 
   const handleGroupSizeChange = (e) => {
@@ -49,66 +58,31 @@ const PlayerComponent = ({ onSelectPlayers, onGoNext }) => {
 
   const submitFinalAvailable = (e) => {
     setIsFinalized(true);
-    onSelectPlayers(selectedPlayers);
+    // onSelectPlayers(selectedPlayers);
   };
 
   const handleFinalizeClick = () => {
     if (groupMode) {
-      const shuffledPlayers = shuffleArray(selectedPlayers);
-      const numGroups = Math.ceil(selectedPlayers.length / groupSize);
-      const groupNames = generateGroupNames(numGroups);
-      const groupedPlayers = [];
+      // const shuffledPlayers = shuffleArray(selectedPlayers);
+      // const numGroups = Math.ceil(selectedPlayers.length / groupSize);
+      // const groupNames = generateGroupNames(numGroups);
+      // const groupedPlayers = [];
 
-      for (let i = 0; i < numGroups; i++) {
-        const groupName = groupNames[i];
-        const groupPlayers = shuffledPlayers.slice(i * groupSize, (i + 1) * groupSize);
-        groupedPlayers.push({ groupName, players: groupPlayers });
-      }
-
-      setGroups(groupedPlayers);
+      // for (let i = 0; i < numGroups; i++) {
+      //   const groupName = groupNames[i];
+      //   const groupPlayers = shuffledPlayers.slice(i * groupSize, (i + 1) * groupSize);
+      //   groupedPlayers.push({ groupName, players: groupPlayers });
+      // }
+      // setGroups(groupedPlayers);
+      dispatch(gameActions.updateGroups({ selectedPlayers, groupSize }));
     }
     else {
-      setFinalizedPlayers(selectedPlayers);
+      // setFinalizedPlayers(selectedPlayers);
+      dispatch(gameActions.updateIndividualPlayers(selectedPlayers));
     }
     setCanStart(true);
   };
 
-  const shuffleArray = (array) => {
-    const shuffledArray = [...array];
-    for (let i = shuffledArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-    }
-    return shuffledArray;
-  };
-
-  const generateGroupNames = (numGroups) => {
-    const colors = [
-      'Red',
-      'Blue',
-      'Green',
-      'Yellow',
-      'Orange',
-      'Purple',
-      'Pink',
-      'Cyan',
-      'Magenta',
-      'Lime',
-      'Teal',
-      'Gold',
-      'Silver',
-      'Brown',
-      'Gray',
-      'Indigo',
-    ];
-    const groupNames = [];
-    for (let i = 0; i < numGroups; i++) {
-      const randomIndex = Math.floor(Math.random() * colors.length);
-      const groupName = colors.splice(randomIndex, 1)[0];
-      groupNames.push(groupName);
-    }
-    return groupNames;
-  };
 
   return (
     <div className={styles.container}>
